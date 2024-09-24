@@ -7,55 +7,52 @@ import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
 
+/**
+ * Класс страницы просмотра/удаления клиентов
+ */
 public class CustomersPage extends BasePage {
 
+    /**
+     * поле ввода поиска клиентов
+     */
     @FindBy(xpath = "//input[@ng-model='searchCustomer']")
     private WebElement searchField;
 
-    @FindBy(xpath = "//table//tbody//td[1]")
-    private WebElement cellFirstName;
-
-    @FindBy(xpath = "//table//tbody//td[2]")
-    private WebElement cellLastName;
-
-    @FindBy(xpath = "//table//tbody//td[3]")
-    private WebElement cellPostCode;
-
+    /**
+     * Заголовок "First Name" (Имя) первой колонки таблицы клиентов
+     */
     @FindBy(xpath = "//table//thead//td//a[contains(@ng-click,'fName')]")
     private WebElement headerFirstName;
 
+    /**
+     * span в заголовке "First Name" первой колоки таблицы, необходим для определния прямой/обратной сортировки
+     */
     @FindBy(xpath = "//table//thead//td//a[contains(@ng-click,'fName')]//span[@ng-show=\"sortType == 'fName' && !sortReverse\"]")
     private WebElement spanFNameSortNotReverse;
 
+    /**
+     * список всех строк таблицы клиентов
+     */
     @FindBy(xpath = "//table[@class=\"table table-bordered table-striped\"]//tbody//tr")
     private List<WebElement> listWebElementsRows;
 
+    /**
+     * список ячеек с именем клиентов
+     */
     @FindBy(xpath = "//table//tbody//tr//td[1]")
     private List<WebElement> listWebElementsFirstName;
 
-
-
-
-
-    public CustomersPage(final   WebDriver webDriver) {
+    /**
+     * Конструктор класса
+     *
+     * @param webDriver web драйвер
+     */
+    public CustomersPage(final WebDriver webDriver) {
         super(webDriver);
     }
 
-
     public void inputSearchField(String postCode) {
         searchField.sendKeys(postCode);
-    }
-
-    public String getTextCellFirstName() {
-        return cellFirstName.getText();
-    }
-
-    public String getTextCellLastName() {
-        return cellLastName.getText();
-    }
-
-    public String getTextCellPostCode() {
-        return cellPostCode.getText();
     }
 
     public void clickHeaderFirstName() {
@@ -78,14 +75,22 @@ public class CustomersPage extends BasePage {
         return listWebElementsFirstName;
     }
 
-
-    public String getCellValue(int row, int column){
-        return driver.findElement(By.xpath("//table//tbody//tr["+row+"]//td["+column+"]")).getText();
+    /**
+     * Метод получения значения запрашиваемой ячейки таблицы клиентов
+     * @param row номер строки таблицы
+     * @param column номер колонки таблицы
+     * @return текстовое содержимое ячейки таблицы
+     */
+    public String getCellValue(int row, int column) {
+        return driver.findElement(By.xpath("//table//tbody//tr[" + row + "]//td[" + column + "]")).getText();
     }
 
-    public void deleteCustomer(int row){
-        WebElement buttonDelete = driver.findElement(By.xpath("//table//tbody//tr["+row+"]//td[5]//button[@ng-click='deleteCust(cust)']"));
+    /**
+     * Метод удаления клиента
+     * @param row номер строки таблицы
+     */
+    public void deleteCustomer(int row) {
+        WebElement buttonDelete = driver.findElement(By.xpath("//table//tbody//tr[" + row + "]//td[5]//button[@ng-click='deleteCust(cust)']"));
         buttonDelete.click();
     }
-
 }

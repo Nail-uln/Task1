@@ -9,34 +9,40 @@ import pages.CustomersPage;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class AddCustomerTest extends BaseTest{
+/**
+ * Класс с тестом создания клиентов
+ */
+public class AddCustomerTest extends BaseTest {
 
     private AddCustPage addCustPage;
     private CustomersPage customersPage;
     private StringBuilder postCode;
     private StringBuilder firstName;
-    private String lastName="Piligrim";
+    private String lastName = "Piligrim";
     private final String letters = "abcdefghijklmnopqrstuvwxyz";
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         addCustPage = managerPage.clickAddCustomerButton();
-
         postCode = new StringBuilder();
         while (postCode.length() < 10) {
             postCode.append((int) (Math.random() * 10));
         }
-
-        String[] arrayStr = splitStringByLength(postCode.toString(),2);
+        String[] arrayStr = splitStringByLength(postCode.toString(), 2);
         firstName = new StringBuilder();
         for (String currentStr : arrayStr) {
             int currentNumber = Integer.parseInt(currentStr);
-            int indexOfLetters = currentNumber%26;
-            firstName.append(letters.substring(indexOfLetters,indexOfLetters+1));
+            int indexOfLetters = currentNumber % 26;
+            firstName.append(letters.substring(indexOfLetters, indexOfLetters + 1));
         }
     }
 
+    /**
+     * Метод, разбивающий строку на подстроки заданной длины
+     * @param str строка которую требуется разбить на подстроки
+     * @param length длина каждой подстроки
+     * @return массив подстрок
+     */
     private String[] splitStringByLength(String str, int length) {
         List<String> parts = new ArrayList<>();
         for (int i = 0; i < str.length(); i += length) {
@@ -48,23 +54,17 @@ public class AddCustomerTest extends BaseTest{
     @Test
     public void addCustomerTest() {
         SoftAssertions softAssertions = new SoftAssertions();
-
         addCustPage.inputPostCodeField(postCode.toString());
         addCustPage.inputFirstNameField(firstName.toString());
         addCustPage.inputLastNameField(lastName);
         addCustPage.clickAddCustomerButton();
-
         String alertMessage = "Customer added successfully with customer id";
         softAssertions.assertThat(addCustPage.getAlertMessage().startsWith(alertMessage));
-
         customersPage = addCustPage.clickCustomersButton();
         customersPage.inputSearchField(postCode.toString());
-
-        softAssertions.assertThat(firstName.toString().equals(customersPage.getTextCellFirstName()));
-        softAssertions.assertThat(lastName.equals(customersPage.getTextCellLastName()));
-        softAssertions.assertThat(postCode.toString().equals(customersPage.getTextCellPostCode()));
-
+        softAssertions.assertThat(firstName.toString().equals(customersPage.getCellValue(1,1)));
+        softAssertions.assertThat(lastName.equals(customersPage.getCellValue(1,2)));
+        softAssertions.assertThat(postCode.toString().equals(customersPage.getCellValue(1,3)));
         softAssertions.assertAll();
     }
-
 }

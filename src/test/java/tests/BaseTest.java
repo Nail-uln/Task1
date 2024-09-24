@@ -8,7 +8,14 @@ import pages.ManagerPage;
 
 import java.time.Duration;
 
+/**
+ * Базовый тест-класс
+ */
 public class BaseTest {
+
+    /**
+     * Web драйвер
+     */
     private static WebDriver driver;
     protected static ManagerPage managerPage;
 
@@ -22,8 +29,7 @@ public class BaseTest {
     }
 
     @AfterAll
-    public static void tearDown(){
+    public static void tearDown() {
         driver.quit();
     }
-
 }

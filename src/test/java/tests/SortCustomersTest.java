@@ -5,6 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pages.CustomersPage;
 
+/**
+ * Класс с тестом сортировки клиентов
+ */
 public class SortCustomersTest extends BaseTest {
 
     private CustomersPage customersPage;
@@ -20,13 +23,12 @@ public class SortCustomersTest extends BaseTest {
         if (customersPage.getSpanFNameSortNotReverse().getAttribute("class").contains("ng-hide")) {
             customersPage.clickHeaderFirstName();
         }
-        String previousFirstName="";
-        String currentFirstName="";
+        String previousFirstName = "";
+        String currentFirstName = "";
         for (int number = 0; number < customersPage.getCountCustomers(); number++) {
             currentFirstName = customersPage.getFirstName(number);
-            Assertions.assertTrue(currentFirstName.compareToIgnoreCase(previousFirstName)>0);
+            Assertions.assertTrue(currentFirstName.compareToIgnoreCase(previousFirstName) > 0);
             previousFirstName = currentFirstName;
         }
     }
-
 }
