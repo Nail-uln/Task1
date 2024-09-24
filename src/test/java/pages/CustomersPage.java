@@ -82,7 +82,7 @@ public class CustomersPage extends BasePage {
      * @return текстовое содержимое ячейки таблицы
      */
     public String getCellValue(int row, int column) {
-        return driver.findElement(By.xpath("//table//tbody//tr[" + row + "]//td[" + column + "]")).getText();
+        return driver.findElement(By.xpath(String.format("//table//tbody//tr[%d]//td[%d]", row, column))).getText();
     }
 
     /**

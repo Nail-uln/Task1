@@ -19,11 +19,7 @@ public class BasePage {
      * @param webDriver web драйвер
      */
     public BasePage(final WebDriver webDriver) {
-        try {
             PageFactory.initElements(webDriver, this);
             this.driver = webDriver;
-        } catch (IllegalStateException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

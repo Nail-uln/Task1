@@ -31,7 +31,7 @@ public class AddCustPage extends BasePage {
     /**
      * Кнопка добавления нового клиента
      */
-    @FindBy(xpath = "//button[@type='submit' and text()='Add Customer']")
+    @FindBy(css = "button[type^='submit'")
     private WebElement addCustomerButton;
 
     /**
@@ -65,13 +65,16 @@ public class AddCustPage extends BasePage {
         addCustomerButton.click();
     }
 
-    public String getAlertMessage() {
+    /**
+     * Метод получения текста всплывающего уведомления и последующее его закрытие
+     * @return
+     */
+    public String getAlertMessageAndAccept() {
         Alert alert = driver.switchTo().alert();
         String message = alert.getText();
         alert.accept();
         return message;
     }
-
 
     public CustomersPage clickCustomersButton() {
         customersButton.click();

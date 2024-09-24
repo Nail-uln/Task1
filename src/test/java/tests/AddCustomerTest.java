@@ -59,7 +59,7 @@ public class AddCustomerTest extends BaseTest {
         addCustPage.inputLastNameField(lastName);
         addCustPage.clickAddCustomerButton();
         String alertMessage = "Customer added successfully with customer id";
-        softAssertions.assertThat(addCustPage.getAlertMessage().startsWith(alertMessage));
+        softAssertions.assertThat(addCustPage.getAlertMessageAndAccept().startsWith(alertMessage));
         customersPage = addCustPage.clickCustomersButton();
         customersPage.inputSearchField(postCode.toString());
         softAssertions.assertThat(firstName.toString().equals(customersPage.getCellValue(1,1)));
