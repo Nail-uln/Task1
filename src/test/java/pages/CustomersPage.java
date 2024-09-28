@@ -97,19 +97,4 @@ public class CustomersPage extends BasePage {
             }
         }
     }
-
-    /**
-     * Метод удаления клиента
-     * @param name номер строки таблицы
-     */
-    public void getRowCustomerByName(String name) {
-        for (int i = 0; i <listWebElementsFirstName.size() ; i++) {
-            if (listWebElementsFirstName.get(i).getText().equals(name)) {
-                WebElement buttonDelete = driver.findElement(By.xpath("//table//tbody//tr[" + (i + 1) + "]//td[5]//button[@ng-click='deleteCust(cust)']"));
-                buttonDelete.click();
-            }
-        }
-    }
-
-
 }
