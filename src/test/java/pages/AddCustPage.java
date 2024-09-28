@@ -49,16 +49,19 @@ public class AddCustPage extends BasePage {
         super(webDriver);
     }
 
-    public void inputFirstNameField(String firstName) {
+    public AddCustPage inputFirstNameField(String firstName) {
         firstNameField.sendKeys(firstName);
+        return this;
     }
 
-    public void inputLastNameField(String lastName) {
+    public AddCustPage inputLastNameField(String lastName) {
         lastNameField.sendKeys(lastName);
+        return this;
     }
 
-    public void inputPostCodeField(String postCode) {
+    public AddCustPage inputPostCodeField(String postCode) {
         postCodeField.sendKeys(postCode);
+        return this;
     }
 
     public void clickAddCustomerButton() {

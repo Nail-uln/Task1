@@ -1,5 +1,6 @@
 package tests;
 
+import helpers.ConfigProperties;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.openqa.selenium.WebDriver;
@@ -24,7 +25,7 @@ public class BaseTest {
         driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.manage().window().maximize();
-        driver.get("https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager");
+        driver.get(ConfigProperties.getProperty("url"));
         managerPage = new ManagerPage(driver);
     }
 

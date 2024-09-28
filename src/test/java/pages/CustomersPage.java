@@ -28,7 +28,7 @@ public class CustomersPage extends BasePage {
      * span в заголовке "First Name" первой колоки таблицы, необходим для определния прямой/обратной сортировки
      */
     @FindBy(xpath = "//table//thead//td//a[contains(@ng-click,'fName')]//span[@ng-show=\"sortType == 'fName' && !sortReverse\"]")
-    private WebElement spanFNameSortNotReverse;
+    private WebElement spanFNameSortType;
 
     /**
      * список всех строк таблицы клиентов
@@ -59,8 +59,8 @@ public class CustomersPage extends BasePage {
         headerFirstName.click();
     }
 
-    public WebElement getSpanFNameSortNotReverse() {
-        return spanFNameSortNotReverse;
+    public boolean isSpanFNameSortReverse() {
+        return spanFNameSortType.getAttribute("class").contains("ng-hide");
     }
 
     public int getCountCustomers() {
@@ -87,10 +87,29 @@ public class CustomersPage extends BasePage {
 
     /**
      * Метод удаления клиента
-     * @param row номер строки таблицы
+     * @param name номер строки таблицы
      */
-    public void deleteCustomer(int row) {
-        WebElement buttonDelete = driver.findElement(By.xpath("//table//tbody//tr[" + row + "]//td[5]//button[@ng-click='deleteCust(cust)']"));
-        buttonDelete.click();
+    public void deleteCustomer(String name) {
+        for (int i = 0; i <listWebElementsFirstName.size() ; i++) {
+            if (listWebElementsFirstName.get(i).getText().equals(name)) {
+                WebElement buttonDelete = driver.findElement(By.xpath("//table//tbody//tr[" + (i + 1) + "]//td[5]//button[@ng-click='deleteCust(cust)']"));
+                buttonDelete.click();
+            }
+        }
     }
+
+    /**
+     * Метод удаления клиента
+     * @param name номер строки таблицы
+     */
+    public void getRowCustomerByName(String name) {
+        for (int i = 0; i <listWebElementsFirstName.size() ; i++) {
+            if (listWebElementsFirstName.get(i).getText().equals(name)) {
+                WebElement buttonDelete = driver.findElement(By.xpath("//table//tbody//tr[" + (i + 1) + "]//td[5]//button[@ng-click='deleteCust(cust)']"));
+                buttonDelete.click();
+            }
+        }
+    }
+
+
 }

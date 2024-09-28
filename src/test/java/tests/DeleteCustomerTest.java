@@ -1,10 +1,11 @@
 package tests;
 
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pages.CustomersPage;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,7 +16,8 @@ public class DeleteCustomerTest extends BaseTest {
 
     private CustomersPage customersPage;
     private List<String> listNames;
-    private Integer lenghtNearestAvg;
+    double averageLengthOfName;
+    private double minDeviation;
 
     @BeforeEach
     public void setUp() {
@@ -23,29 +25,49 @@ public class DeleteCustomerTest extends BaseTest {
         listNames = customersPage.getListWebElementsFirstName().stream()
                 .map(webElement -> webElement.getText())
                 .collect(Collectors.toList());
-        double averageLengthOfName = listNames.stream()
+        averageLengthOfName = listNames.stream()
                 .mapToInt(String::length)
                 .average()
                 .orElse(0.0);
-        lenghtNearestAvg = listNames.stream()
+        minDeviation = listNames.stream()
                 .map(String::length)
-                .min((num1, num2) -> Math.abs(num1 - averageLengthOfName) < Math.abs(num2 - averageLengthOfName) ? -1 : 1)
-                .orElse(null);
+                .map(lengthName -> (Math.round(Math.abs(lengthName - averageLengthOfName) * 100.0) / 100.0))
+                .min(Double::compare).get();
     }
 
     @Test
     public void deleteCustomerTest() {
+        List<String> deletedNamesList = new ArrayList<>();
         listNames.stream()
-                .filter(name -> name.length() == lenghtNearestAvg)
+                .filter(name -> Math.round(Math.abs(name.length() - averageLengthOfName) * 100.0) / 100.0 == minDeviation)
                 .forEach(name -> {
-                    for (int row = 1; row <= customersPage.getCountCustomers(); row++) {
-                        if (name.equals(customersPage.getCellValue(row, 1))) {
-                            customersPage.deleteCustomer(row);
+                            customersPage.deleteCustomer(name);
+                            deletedNamesList.add(name);
                         }
+                );
+
+        SoftAssertions softAssertions = new SoftAssertions();
+        deletedNamesList
+                .forEach(deletedName -> {
+                    for (int number = 0; number < customersPage.getCountCustomers(); number++) {
+                        softAssertions.assertThat(customersPage.getFirstName(number)).isNotEqualTo(deletedName);
                     }
                 });
-        for (int row = 1; row <= customersPage.getCountCustomers(); row++) {
-            Assertions.assertNotEquals(lenghtNearestAvg, customersPage.getCellValue(row, 1).length());
-        }
+        softAssertions.assertAll();
     }
+
+    @Test
+    public void deleteCustomerTest2() {
+        List<String> deletedNamesList = new ArrayList<>();
+        listNames.stream()
+                .filter(name -> Math.round(Math.abs(name.length() - averageLengthOfName) * 100.0) / 100.0 == minDeviation)
+                .forEach(name -> {
+                            customersPage.deleteCustomer(name);
+                            deletedNamesList.add(name);
+                        }
+                );
+
+
+    }
+
 }

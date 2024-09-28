@@ -1,12 +1,13 @@
 package tests;
 
+import helpers.ConfigProperties;
+import helpers.Helpers;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pages.AddCustPage;
 import pages.CustomersPage;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,57 +15,41 @@ import java.util.List;
  */
 public class AddCustomerTest extends BaseTest {
 
+    Helpers helpers = new Helpers();
     private AddCustPage addCustPage;
     private CustomersPage customersPage;
-    private StringBuilder postCode;
-    private StringBuilder firstName;
-    private String lastName = "Piligrim";
-    private final String letters = "abcdefghijklmnopqrstuvwxyz";
+    private String postCode;
+    private String firstName;
+    private final String lastName = ConfigProperties.getProperty("data.lastName");
+    private final String letters = ConfigProperties.getProperty("data.letters");
 
     @BeforeEach
     public void setUp() {
         addCustPage = managerPage.clickAddCustomerButton();
-        postCode = new StringBuilder();
-        while (postCode.length() < 10) {
-            postCode.append((int) (Math.random() * 10));
-        }
-        String[] arrayStr = splitStringByLength(postCode.toString(), 2);
-        firstName = new StringBuilder();
-        for (String currentStr : arrayStr) {
+        postCode = helpers.generateRandomPostCode(10);
+        List<String> listString = helpers.splitStringByLength(postCode, 2);
+        firstName="";
+        for (String currentStr : listString) {
             int currentNumber = Integer.parseInt(currentStr);
             int indexOfLetters = currentNumber % 26;
-            firstName.append(letters.substring(indexOfLetters, indexOfLetters + 1));
+            firstName = "%s%s".formatted(firstName, letters.substring(indexOfLetters, indexOfLetters + 1));
         }
-    }
-
-    /**
-     * Метод, разбивающий строку на подстроки заданной длины
-     * @param str строка которую требуется разбить на подстроки
-     * @param length длина каждой подстроки
-     * @return массив подстрок
-     */
-    private String[] splitStringByLength(String str, int length) {
-        List<String> parts = new ArrayList<>();
-        for (int i = 0; i < str.length(); i += length) {
-            parts.add(str.substring(i, Math.min(i + length, str.length())));
-        }
-        return parts.toArray(new String[0]);
     }
 
     @Test
     public void addCustomerTest() {
         SoftAssertions softAssertions = new SoftAssertions();
-        addCustPage.inputPostCodeField(postCode.toString());
-        addCustPage.inputFirstNameField(firstName.toString());
-        addCustPage.inputLastNameField(lastName);
-        addCustPage.clickAddCustomerButton();
-        String alertMessage = "Customer added successfully with customer id";
-        softAssertions.assertThat(addCustPage.getAlertMessageAndAccept().startsWith(alertMessage));
+        addCustPage.inputPostCodeField(postCode)
+                .inputFirstNameField(firstName)
+                .inputLastNameField(lastName)
+                .clickAddCustomerButton();
+        String alertMessage = ConfigProperties.getProperty("data.alertMessage");
+        softAssertions.assertThat(addCustPage.getAlertMessageAndAccept()).startsWith(alertMessage);
         customersPage = addCustPage.clickCustomersButton();
-        customersPage.inputSearchField(postCode.toString());
-        softAssertions.assertThat(firstName.toString().equals(customersPage.getCellValue(1,1)));
-        softAssertions.assertThat(lastName.equals(customersPage.getCellValue(1,2)));
-        softAssertions.assertThat(postCode.toString().equals(customersPage.getCellValue(1,3)));
+        customersPage.inputSearchField(postCode);
+        softAssertions.assertThat(customersPage.getCellValue(1,1)).isEqualTo(firstName);
+        softAssertions.assertThat(customersPage.getCellValue(1,2)).isEqualTo(lastName);
+        softAssertions.assertThat(customersPage.getCellValue(1,3)).isEqualTo(postCode);
         softAssertions.assertAll();
     }
 }

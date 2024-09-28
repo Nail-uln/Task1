@@ -20,14 +20,14 @@ public class SortCustomersTest extends BaseTest {
     @Test
     public void sortCustomersTest() {
         customersPage.clickHeaderFirstName();
-        if (customersPage.getSpanFNameSortNotReverse().getAttribute("class").contains("ng-hide")) {
+        if (customersPage.isSpanFNameSortReverse()) {
             customersPage.clickHeaderFirstName();
         }
         String previousFirstName = "";
         String currentFirstName = "";
         for (int number = 0; number < customersPage.getCountCustomers(); number++) {
             currentFirstName = customersPage.getFirstName(number);
-            Assertions.assertTrue(currentFirstName.compareToIgnoreCase(previousFirstName) > 0);
+            Assertions.assertTrue(currentFirstName.compareToIgnoreCase(previousFirstName) >= 0);
             previousFirstName = currentFirstName;
         }
     }
