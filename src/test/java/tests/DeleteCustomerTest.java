@@ -55,19 +55,4 @@ public class DeleteCustomerTest extends BaseTest {
                 });
         softAssertions.assertAll();
     }
-
-    @Test
-    public void deleteCustomerTest2() {
-        List<String> deletedNamesList = new ArrayList<>();
-        listNames.stream()
-                .filter(name -> Math.round(Math.abs(name.length() - averageLengthOfName) * 100.0) / 100.0 == minDeviation)
-                .forEach(name -> {
-                            customersPage.deleteCustomer(name);
-                            deletedNamesList.add(name);
-                        }
-                );
-
-
-    }
-
 }
