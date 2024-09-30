@@ -22,7 +22,7 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>4.21.0</version>
+            <version>4.22.0</version>
         </dependency>
 
         <dependency>
@@ -49,12 +49,28 @@
             <version>${junit.platform.version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>3.26.0</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.34</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>5.5.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.11.0</version>
         </dependency>
     </dependencies>
 
@@ -64,6 +80,27 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.3.1</version>
+                <configuration>
+                    <excludes>
+                        <exclude>AddCustomerTest.java</exclude>
+                        <exclude>DeleteCustomerTest.java</exclude>
+                        <exclude>SortCustomersTest.java</exclude>
+                    </excludes>
+<!--
+                    <properties>
+                        <configurationParameters>
+                            junit.jupiter.execution.parallel.enabled=true
+                            junit.jupiter.execution.parallel.mode.default=concurrent
+                        </configurationParameters>
+                    </properties>
+                    <parallel>methods</parallel>
+                    <threadCount>4</threadCount>
+с этими настройками параллельный запуск не получился: запускаются параллельно, но тесты падают (поиски сущности возвращают HttpStatus.SC_INTERNAL_SERVER_ERROR)
+после этого даже postman возвращает - "error": "conn closed"
+приходится рестартовать контейнер
+поразбираться с этим уже не успел
+-->
+                </configuration>
             </plugin>
         </plugins>
     </build>

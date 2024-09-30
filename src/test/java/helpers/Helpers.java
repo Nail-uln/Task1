@@ -15,7 +15,7 @@ public class Helpers {
      */
     public String generateRandomPostCode(int countSymbol) {
         StringBuilder postCode = new StringBuilder();
-        while (postCode.length() < 10) {
+        while (postCode.length() < countSymbol) {
             postCode.append((int) (Math.random() * 10));
         }
         return  postCode.toString();
